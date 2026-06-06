@@ -1,82 +1,41 @@
 {
-    "id": "com.abdelhakim.monsuivifinancier",
     "name": "Mon Suivi Financier",
     "short_name": "Suivi Financier",
-    "description": "Gestionnaire de budget international avec prédictions par pays - 7 langues supportées",
+    "description": "Gestionnaire de budget international avec prédictions par pays",
     "start_url": "https://abdelhakim-dev.github.io/mon-suivi-financier/",
     "scope": "https://abdelhakim-dev.github.io/mon-suivi-financier/",
     "display": "standalone",
-    "display_override": ["standalone", "minimal-ui"],
     "background_color": "#2563eb",
     "theme_color": "#2563eb",
     "orientation": "portrait-primary",
     "lang": "fr",
-    "dir": "ltr",
-    "categories": ["finance", "utilities", "productivity"],
-    "iarc_rating_id": "3+",
-    "prefer_related_applications": false,
+    "categories": ["finance", "utilities"],
     "icons": [
         {
-            "src": "icons/icon-72x72.png",
-            "sizes": "72x72",
-            "type": "image/png",
-            "purpose": "any"
-        },
-        {
-            "src": "icons/icon-96x96.png",
-            "sizes": "96x96",
-            "type": "image/png",
-            "purpose": "any"
-        },
-        {
-            "src": "icons/icon-128x128.png",
-            "sizes": "128x128",
-            "type": "image/png",
-            "purpose": "any"
-        },
-        {
-            "src": "icons/icon-144x144.png",
-            "sizes": "144x144",
-            "type": "image/png",
-            "purpose": "any"
-        },
-        {
-            "src": "icons/icon-152x152.png",
-            "sizes": "152x152",
-            "type": "image/png",
-            "purpose": "any"
-        },
-        {
-            "src": "icons/icon-192x192.png",
+            "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjE5MiIgaGVpZ2h0PSIxOTIiIHJ4PSI0MCIgZmlsbD0iIzI1NjNlYiIvPjxjaXJjbGUgY3g9Ijk2IiBjeT0iNzUiIHI9IjUwIiBmaWxsPSIjZmJiZjI0IiBzdHJva2U9IiNmNTllMGIiIHN0cm9rZS13aWR0aD0iNCIvPjx0ZXh0IHg9Ijk2IiB5PSI5NSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSI2MCIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IiM5MjQwMGUiIGZvbnQtZmFtaWx5PSJBcmlhbCI+4oKxPC90ZXh0Pjx0ZXh0IHg9Ijk2IiB5PSIxNjAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMjAiIGZpbGw9IndoaXRlIiBmb250LWZhbWlseT0iQXJpYWwiPk1PTiBTVUlWSTwvdGV4dD48L3N2Zz4=",
             "sizes": "192x192",
-            "type": "image/png",
+            "type": "image/svg+xml",
             "purpose": "any maskable"
         },
         {
-            "src": "icons/icon-384x384.png",
-            "sizes": "384x384",
-            "type": "image/png",
-            "purpose": "any maskable"
-        },
-        {
-            "src": "icons/icon-512x512.png",
+            "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDUxMiA1MTIiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjUxMiIgaGVpZ2h0PSI1MTIiIHJ4PSIxMjAiIGZpbGw9IiMyNTYzZWIiLz48Y2lyY2xlIGN4PSIyNTYiIGN5PSIyMDAiIHI9IjEzMCIgZmlsbD0iI2ZiYmYyNCIgc3Ryb2tlPSIjZjU5ZTBiIiBzdHJva2Utd2lkdGg9IjgiLz48dGV4dCB4PSIyNTYiIHk9IjI2MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxNTAiIGZvbnQtd2VpZ2h0PSJib2xkIiBmaWxsPSIjOTI0MDBlIiBmb250LWZhbWlseT0iQXJpYWwiPvKCsTwvdGV4dD48dGV4dCB4PSIyNTYiIHk9IjQ0MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSI0MCIgZmlsbD0id2hpdGUiIGZvbnQtZmFtaWx5PSJBcmlhbCI+TU9OIFNVSVZJIEZJTkFOQ0lFUjwvdGV4dD48L3N2Zz4=",
             "sizes": "512x512",
-            "type": "image/png",
+            "type": "image/svg+xml",
             "purpose": "any maskable"
         }
     ],
     "screenshots": [
         {
-            "src": "screenshots/screen-1.png",
+            "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTA4MCIgaGVpZ2h0PSIxOTIwIiB2aWV3Qm94PSIwIDAgMTA4MCAxOTIwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IHdpZHRoPSIxMDgwIiBoZWlnaHQ9IjE5MjAiIGZpbGw9IiMyNTYzZWIiLz48dGV4dCB4PSI1NDAiIHk9Ijk2MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSI2MCIgZmlsbD0id2hpdGUiIGZvbnQtZmFtaWx5PSJBcmlhbCI+4pqwIENhbGN1bGF0ZXVyIGRlIEJ1ZGdldDwvdGV4dD48L3N2Zz4=",
             "sizes": "1080x1920",
-            "type": "image/png",
+            "type": "image/svg+xml",
             "form_factor": "narrow",
             "label": "Calculateur de budget"
         },
         {
-            "src": "screenshots/screen-2.png",
+            "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTA4MCIgaGVpZ2h0PSIxOTIwIiB2aWV3Qm94PSIwIDAgMTA4MCAxOTIwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IHdpZHRoPSIxMDgwIiBoZWlnaHQ9IjE5MjAiIGZpbGw9IiMxMGI5ODEiLz48dGV4dCB4PSI1NDAiIHk9Ijk2MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSI2MCIgZmlsbD0id2hpdGUiIGZvbnQtZmFtaWx5PSJBcmlhbCI+8J+SriBSw6lzdWx0YXRzIGV0IEdyYXBoaXF1ZXM8L3RleHQ+PC9zdmc+",
             "sizes": "1080x1920",
-            "type": "image/png",
+            "type": "image/svg+xml",
             "form_factor": "narrow",
             "label": "Résultats et graphiques"
         }
@@ -84,36 +43,23 @@
     "shortcuts": [
         {
             "name": "Calculateur",
-            "short_name": "Calcul",
-            "description": "Ouvrir le calculateur",
             "url": "https://abdelhakim-dev.github.io/mon-suivi-financier/",
-            "icons": [{"src": "icons/icon-96x96.png", "sizes": "96x96"}]
+            "icons": [
+                {
+                    "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOTYiIGhlaWdodD0iOTYiIHZpZXdCb3g9IjAgMCA5NiA5NiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iOTYiIGhlaWdodD0iOTYiIHJ4PSIyMCIgZmlsbD0iIzI1NjNlYiIvPjx0ZXh0IHg9IjQ4IiB5PSI2MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSI0MCIgZmlsbD0id2hpdGUiPuKckDwvdGV4dD48L3N2Zz4=",
+                    "sizes": "96x96"
+                }
+            ]
         },
         {
             "name": "Historique",
-            "short_name": "Historique",
-            "description": "Voir l'historique",
             "url": "https://abdelhakim-dev.github.io/mon-suivi-financier/",
-            "icons": [{"src": "icons/icon-96x96.png", "sizes": "96x96"}]
+            "icons": [
+                {
+                    "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOTYiIGhlaWdodD0iOTYiIHZpZXdCb3g9IjAgMCA5NiA5NiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iOTYiIGhlaWdodD0iOTYiIHJ4PSIyMCIgZmlsbD0iIzEwYjk4MSIvPjx0ZXh0IHg9IjQ4IiB5PSI2MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSI0MCIgZmlsbD0id2hpdGUiPvCfk8s8L3RleHQ+PC9zdmc+",
+                    "sizes": "96x96"
+                }
+            ]
         }
-    ],
-    "share_target": {
-        "action": "https://abdelhakim-dev.github.io/mon-suivi-financier/",
-        "method": "GET",
-        "enctype": "application/x-www-form-urlencoded",
-        "params": {
-            "title": "title",
-            "text": "text",
-            "url": "url"
-        }
-    },
-    "related_applications": [
-        {
-            "platform": "play",
-            "id": "com.abdelhakim.monsuivifinancier"
-        }
-    ],
-    "launch_handler": {
-        "client_mode": "auto"
-    }
+    ]
 }
