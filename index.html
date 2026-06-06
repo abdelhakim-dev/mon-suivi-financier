@@ -113,7 +113,7 @@
         .config-screen { background-color: var(--panel-bg); padding: 20px; border-radius: 18px; border: 1px solid var(--panel-border); margin-bottom: 25px; }
         .config-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         .config-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
-        .config-grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 12px; }
+        .config-grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 1fr; gap: 12px; }
         .depenses-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
         .form-group { margin-bottom: 15px; }
         label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 13px; color: var(--text-muted); }
@@ -428,14 +428,14 @@
             <!-- GESTION -->
             <div class="config-screen" style="margin-top:25px;">
                 <h2 id="titre-gestion">📂 Gestion</h2>
-                <div class="config-grid-4">
-                    <button id="btn-sauvegarder" class="btn-action btn-primary" onclick="sauvegarderCalcul()">💾 Sauvegarder</button>
-                    <button id="btn-exporter" class="btn-action" onclick="exporterBudget()">📤 JSON</button>
-                    <button id="btn-exporter-image" class="btn-action btn-success" onclick="exporterImage()">🖼️ Image</button>
-                    <button id="btn-importer" class="btn-action" onclick="document.getElementById('import-file').click()">📥 Importer</button>
-                    <input type="file" id="import-file" style="display:none" onchange="importerBudget(event)">
-                    <button id="btn-reset" class="btn-action btn-danger" onclick="reinitialiserApplication()">🗑️ Reset</button>
-                </div>
+               <div style="display:flex; flex-wrap:wrap; gap:12px; justify-content:center;">
+    <button id="btn-sauvegarder" class="btn-action btn-primary" onclick="sauvegarderCalcul()">💾 Sauvegarder</button>
+    <button id="btn-exporter" class="btn-action" onclick="exporterBudget()">📤 JSON</button>
+    <button id="btn-exporter-image" class="btn-action btn-success" onclick="exporterImage()">🖼️ Image</button>
+    <button id="btn-importer" class="btn-action" onclick="document.getElementById('import-file').click()">📥 Importer</button>
+    <input type="file" id="import-file" style="display:none" onchange="importerBudget(event)">
+    <button id="btn-reset" class="btn-action btn-danger" onclick="reinitialiserApplication()">🗑️ Reset</button>
+</div>
             </div>
         </div>
     </div>
