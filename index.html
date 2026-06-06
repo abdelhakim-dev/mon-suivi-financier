@@ -15,11 +15,19 @@
     <link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512x512.png">
     <link rel="apple-touch-icon" href="icons/icon-512x512.png">
     <link rel="manifest" href="manifest.json">
+    
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-    <link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512x512.png">
-    <link rel="apple-touch-icon" href="icons/icon-512x512.png">
-     
+    
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/mon-suivi-financier/sw.js')
+                    .then(function(reg) { console.log('SW OK'); })
+                    .catch(function(err) { console.log('SW Erreur'); });
+            });
+        }
+    </script>
     
     <style>
         @keyframes dynamicBackground {
@@ -145,6 +153,17 @@
 
         .version-badge { position: fixed; bottom: 10px; left: 10px; background: var(--container-bg); padding: 5px 12px; border-radius: 15px; font-size: 11px; color: var(--text-muted); z-index: 100; backdrop-filter: blur(10px); border: 1px solid var(--panel-border); }
 
+        /* Style pour l'export image */
+        .export-table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 16px; }
+        .export-table th { background: #2563eb; color: white; padding: 15px; text-align: left; font-size: 18px; }
+        .export-table td { padding: 12px 15px; border-bottom: 2px solid #e2e8f0; }
+        .export-table .total-row { background: #f0fff4; font-weight: bold; font-size: 18px; }
+        .export-table .revenus { color: #10b981; }
+        .export-table .depenses { color: #ef4444; }
+        .export-header { text-align: center; padding: 20px; background: linear-gradient(135deg, #2563eb, #7c3aed); color: white; border-radius: 16px; margin-bottom: 20px; }
+        .export-header h2 { color: white; border: none; margin: 0; font-size: 24px; }
+        .export-header p { margin: 5px 0 0 0; opacity: 0.9; }
+
         @media (max-width: 768px) {
             .config-grid-3, .config-grid-4 { grid-template-columns: 1fr; }
             .depenses-grid { grid-template-columns: 1fr 1fr; }
@@ -157,15 +176,6 @@
             .header-nav { flex-direction: column; align-items: stretch; }
         }
     </style>
-    <script>
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', function() {
-            navigator.serviceWorker.register('/mon-suivi-financier/sw.js')
-                .then(function(reg) { console.log('SW OK'); })
-                .catch(function(err) { console.log('SW Erreur'); });
-        });
-    }
-</script>
 </head>
 <body>
 
@@ -189,7 +199,7 @@
     <div id="screen-accueil" class="screen active">
         <div class="app-container" style="text-align:center;">
             <h1>💰 Mon Suivi Financier</h1>
-            <p style="color: var(--text-muted); font-size: 18px;">Gérez votre budget quotidien intelligemment</p>
+            <p style="color: var(--text-muted); font-size: 18px;">Gérez votre budget quotidien intelligent</p>
             <div style="margin: 30px 0;">
                 <button id="btn-acceder" class="btn-action btn-primary" onclick="changerEcran('calculateur')" style="font-size:18px; padding:15px 30px;">
                     🚀 Accéder à l'application →
@@ -200,7 +210,7 @@
 
     <!-- ÉCRAN CALCULATEUR -->
     <div id="screen-calculateur" class="screen">
-        <div class="app-container">
+        <div class="app-container" id="contenu-a-exporter">
             <h1 id="app-title">📊 Calculateur de Budget Complet</h1>
 
             <!-- CONFIG -->
@@ -398,7 +408,7 @@
             </div>
 
             <!-- RÉSULTATS -->
-            <div class="split-results">
+            <div class="split-results" id="resultats-export">
                 <div class="result-panel"><div class="result-label">💰 Revenus totaux</div><div class="result-display" id="total-revenus">0.00</div></div>
                 <div class="result-panel"><div class="result-label">📤 Dépenses totales</div><div class="result-display" id="total-depenses" style="color:#ef4444;">0.00</div></div>
                 <div class="result-panel"><div class="result-label" id="label-mensuel">💎 Reste mensuel</div><div class="result-display" id="month-result">0.00</div></div>
@@ -418,12 +428,11 @@
             <!-- GESTION -->
             <div class="config-screen" style="margin-top:25px;">
                 <h2 id="titre-gestion">📂 Gestion</h2>
-            <div class="config-grid-4">
-                <button id="btn-sauvegarder" class="btn-action btn-primary" onclick="sauvegarderCalcul()">💾 Sauvegarder</button>
-                  <button id="btn-exporter" class="btn-action" onclick="exporterBudget()">📤 Exporter JSON</button>
-             <button id="btn-exporter-image" class="btn-action btn-success" onclick="exporterImage()">🖼️ Exporter Image</button>
-               <button id="btn-importer" class="btn-action" onclick="document.getElementById('import-file').click()">📥 Importer</button>
-                                
+                <div class="config-grid-4">
+                    <button id="btn-sauvegarder" class="btn-action btn-primary" onclick="sauvegarderCalcul()">💾 Sauvegarder</button>
+                    <button id="btn-exporter" class="btn-action" onclick="exporterBudget()">📤 JSON</button>
+                    <button id="btn-exporter-image" class="btn-action btn-success" onclick="exporterImage()">🖼️ Image</button>
+                    <button id="btn-importer" class="btn-action" onclick="document.getElementById('import-file').click()">📥 Importer</button>
                     <input type="file" id="import-file" style="display:none" onchange="importerBudget(event)">
                     <button id="btn-reset" class="btn-action btn-danger" onclick="reinitialiserApplication()">🗑️ Reset</button>
                 </div>
@@ -505,10 +514,8 @@
     <div class="version-badge" id="version-badge">v1.0.0</div>
 
     <script>
-        // ============================================
-        // SYSTÈME DE VERSION
-        // ============================================
-        const APP_VERSION = {version:"1.0.0",versionCode:1,dateMiseAJour:"2026-06-06",changelog:["🚀 Lancement","📊 Calculateur complet","🌍 40+ pays","🤖 Prédictions","💾 Sauvegarde"]};
+        // VERSION
+        const APP_VERSION = {version:"1.0.0",versionCode:1,dateMiseAJour:"2026-06-06",changelog:["🚀 Lancement","📊 Calculateur complet","🌍 40+ pays","🤖 Prédictions","🖼️ Export Image"]};
         
         function afficherInfoVersion(){
             document.getElementById('version-overlay').classList.add('active');
@@ -516,13 +523,9 @@
             document.getElementById('changelog-content').innerHTML=`<h4>📝 Nouveautés</h4><ul>${APP_VERSION.changelog.map(c=>`<li>${c}</li>`).join('')}</ul>`;
         }
         function fermerVersion(){document.getElementById('version-overlay').classList.remove('active');}
-        function verifierMiseAJour(){
-            alert('✅ Vous avez la dernière version (v'+APP_VERSION.version+')');
-        }
+        function verifierMiseAJour(){alert('✅ Vous avez la dernière version (v'+APP_VERSION.version+')');}
 
-        // ============================================
-        // TRADUCTIONS (7 LANGUES)
-        // ============================================
+        // TRADUCTIONS
         const traductions = {
             fr:{titre:"📊 Calculateur de Budget Complet",salaire:"💼 Salaire principal",loyer:"🏠 Loyer/Logement",mensuel:"💎 Reste mensuel",journalier:"📅 Budget journalier",gestion:"📂 Gestion",exporter:"📤 Exporter",importer:"📥 Importer",reset:"🗑️ Reset",langue:"🌐 Langue",devise:"💱 Devise",pays:"🌍 Pays",acceder:"🚀 Accéder à l'application →",revenus:"Revenus",depenses:"Dépenses",accueil:"← Accueil",mode:"🌓 Mode",connecter:"🔑 Connexion",deconnecter:"Déconnexion",epargne:"🏦 Épargne souhaitée",epargneRes:"🏦 Épargne réalisable",sauvegarder:"💾 Sauvegarder",historique:"📋 Historique",suggestions:"💡 Améliorations",predire:"🤖 Prédire les montants",inscription:"📝 Inscription",version:"ℹ️ Version"},
             en:{titre:"📊 Complete Budget Calculator",salaire:"💼 Main Salary",loyer:"🏠 Rent/Housing",mensuel:"💎 Monthly Remainder",journalier:"📅 Daily Budget",gestion:"📂 Management",exporter:"📤 Export",importer:"📥 Import",reset:"🗑️ Reset",langue:"🌐 Language",devise:"💱 Currency",pays:"🌍 Country",acceder:"🚀 Open app →",revenus:"Income",depenses:"Expenses",accueil:"← Home",mode:"🌓 Mode",connecter:"🔑 Login",deconnecter:"Logout",epargne:"🏦 Desired Savings",epargneRes:"🏦 Achievable Savings",sauvegarder:"💾 Save",historique:"📋 History",suggestions:"💡 Suggestions",predire:"🤖 Predict amounts",inscription:"📝 Register",version:"ℹ️ Version"},
@@ -536,28 +539,14 @@
         function changerLangue(){
             const langue=document.getElementById('lang-select').value;
             const t=traductions[langue]||traductions.fr;
-            const map={
-                'app-title':t.titre,'label-salaire':t.salaire,'label-loyer':t.loyer,
-                'label-mensuel':t.mensuel,'label-journalier':t.journalier,
-                'label-epargne':t.epargne,'label-epargne-result':t.epargneRes,
-                'label-langue':t.langue,'label-devise':t.devise,'label-pays':t.pays,
-                'titre-gestion':t.gestion,'btn-exporter':t.exporter,'btn-importer':t.importer,
-                'btn-reset':t.reset,'btn-sauvegarder':t.sauvegarder,'btn-acceder':t.acceder,
-                'btn-back':t.accueil,'btn-theme':t.mode,'nav-login':t.connecter,
-                'nav-logout':t.deconnecter,'btn-history':t.historique,
-                'btn-suggestions':t.suggestions,'nav-register':t.inscription,'btn-version':t.version
-            };
-            Object.entries(map).forEach(([id,text])=>{
-                const el=document.getElementById(id);if(el)el.textContent=text;
-            });
+            const map={'app-title':t.titre,'label-salaire':t.salaire,'label-loyer':t.loyer,'label-mensuel':t.mensuel,'label-journalier':t.journalier,'label-epargne':t.epargne,'label-epargne-result':t.epargneRes,'label-langue':t.langue,'label-devise':t.devise,'label-pays':t.pays,'titre-gestion':t.gestion,'btn-exporter':t.exporter,'btn-importer':t.importer,'btn-reset':t.reset,'btn-sauvegarder':t.sauvegarder,'btn-acceder':t.acceder,'btn-back':t.accueil,'btn-theme':t.mode,'nav-login':t.connecter,'nav-logout':t.deconnecter,'btn-history':t.historique,'btn-suggestions':t.suggestions,'nav-register':t.inscription,'btn-version':t.version};
+            Object.entries(map).forEach(([id,text])=>{const el=document.getElementById(id);if(el)el.textContent=text;});
             const bp=document.querySelector('.btn-warning');if(bp)bp.textContent=t.predire;
             if(monGraphique){monGraphique.data.labels=[t.revenus,t.depenses,'Épargne','Réserve'];monGraphique.update();}
             localStorage.setItem('budget_langue',langue);document.documentElement.lang=langue;
         }
 
-        // ============================================
         // APPLICATION
-        // ============================================
         let monGraphique=null,timerSauvegarde,utilisateurConnecte=null;
 
         const predictionsPays={
@@ -597,11 +586,105 @@
                 education:document.getElementById('dep-education').value,loisirs:document.getElementById('dep-loisirs').value,
                 factures:document.getElementById('dep-factures').value,credits:document.getElementById('dep-credits').value,
                 epargne:document.getElementById('epargne').value,reserveSecurite:document.getElementById('reserve-securite').value,
-                commentaire:document.getElementById('commentaire').value,devise:document.getElementById('currency-select').value
+                commentaire:document.getElementById('commentaire').value,devise:document.getElementById('currency-select').value,
+                pays:document.getElementById('pays-select').value
             };
         }
 
         function sauvegarderEtCalculer(){localStorage.setItem('free_budget_system_data',JSON.stringify(getData()));calculerTout();}
+
+        // ============================================
+        // FONCTION D'EXPORT EN IMAGE (TABLEAU ORGANISÉ)
+        // ============================================
+        function exporterImage() {
+            // Créer un élément temporaire pour l'export
+            var exportDiv = document.createElement('div');
+            exportDiv.style.cssText = 'position:fixed;top:0;left:0;width:800px;background:white;padding:30px;z-index:-9999;font-family:Arial;';
+            document.body.appendChild(exportDiv);
+            
+            var d = getData();
+            var totalRevenus = parseFloat(d.salaire) + parseFloat(d.aides) + parseFloat(d.bourse);
+            var totalDepenses = parseFloat(d.loyer) + parseFloat(d.electricite) + parseFloat(d.eau) + parseFloat(d.internet) + parseFloat(d.abonnements) + parseFloat(d.shopping) + parseFloat(d.transport) + parseFloat(d.alimentation) + parseFloat(d.sante) + parseFloat(d.education) + parseFloat(d.loisirs) + parseFloat(d.factures) + parseFloat(d.credits);
+            var resteMensuel = totalRevenus - totalDepenses;
+            var epargneRealisable = Math.min(parseFloat(d.epargne), Math.max(0, resteMensuel));
+            var budgetJournalier = (resteMensuel - epargneRealisable - parseFloat(d.reserveSecurite)) / 30;
+            var sym = {MAD:'د.م.',EUR:'€',USD:'$',GBP:'£',JPY:'¥',CHF:'CHF',CAD:'CA$',CNY:'¥',INR:'₹',ZAR:'R',NGN:'₦',KES:'KSh',EGP:'E£',GHS:'GH₵',DZD:'د.ج',TND:'د.ت'};
+            var s = sym[d.devise] || d.devise;
+            
+            var paysNom = document.getElementById('pays-select').selectedOptions[0].text || 'N/A';
+            var date = new Date().toLocaleDateString('fr-FR');
+            
+            exportDiv.innerHTML = `
+                <div class="export-header">
+                    <h2>💰 Mon Suivi Financier</h2>
+                    <p>Rapport du ${date} - ${paysNom}</p>
+                </div>
+                
+                <table class="export-table">
+                    <tr><th colspan="2">📊 REVENUS</th></tr>
+                    <tr><td>💼 Salaire principal</td><td class="revenus">${parseFloat(d.salaire).toFixed(2)} ${s}</td></tr>
+                    <tr><td>🎁 Aides sociales</td><td class="revenus">${parseFloat(d.aides).toFixed(2)} ${s}</td></tr>
+                    <tr><td>📈 Bourse/Allocations</td><td class="revenus">${parseFloat(d.bourse).toFixed(2)} ${s}</td></tr>
+                    <tr class="total-row"><td><strong>TOTAL REVENUS</strong></td><td class="revenus"><strong>${totalRevenus.toFixed(2)} ${s}</strong></td></tr>
+                </table>
+                
+                <table class="export-table">
+                    <tr><th colspan="2">🏠 DÉPENSES FIXES</th></tr>
+                    <tr><td>🏠 Loyer/Logement</td><td class="depenses">${parseFloat(d.loyer).toFixed(2)} ${s}</td></tr>
+                    <tr><td>💡 Électricité</td><td class="depenses">${parseFloat(d.electricite).toFixed(2)} ${s}</td></tr>
+                    <tr><td>💧 Eau</td><td class="depenses">${parseFloat(d.eau).toFixed(2)} ${s}</td></tr>
+                    <tr><td>🌐 Internet</td><td class="depenses">${parseFloat(d.internet).toFixed(2)} ${s}</td></tr>
+                    <tr><td>📱 Abonnements</td><td class="depenses">${parseFloat(d.abonnements).toFixed(2)} ${s}</td></tr>
+                </table>
+                
+                <table class="export-table">
+                    <tr><th colspan="2">🛒 DÉPENSES VARIABLES</th></tr>
+                    <tr><td>🛍️ Shopping/Vêtements</td><td class="depenses">${parseFloat(d.shopping).toFixed(2)} ${s}</td></tr>
+                    <tr><td>🚗 Transport/Essence</td><td class="depenses">${parseFloat(d.transport).toFixed(2)} ${s}</td></tr>
+                    <tr><td>🍽️ Alimentation</td><td class="depenses">${parseFloat(d.alimentation).toFixed(2)} ${s}</td></tr>
+                    <tr><td>🏥 Santé/Pharmacie</td><td class="depenses">${parseFloat(d.sante).toFixed(2)} ${s}</td></tr>
+                    <tr><td>🎓 Éducation/Formation</td><td class="depenses">${parseFloat(d.education).toFixed(2)} ${s}</td></tr>
+                    <tr><td>🎮 Loisirs/Divertissement</td><td class="depenses">${parseFloat(d.loisirs).toFixed(2)} ${s}</td></tr>
+                    <tr><td>📋 Factures diverses</td><td class="depenses">${parseFloat(d.factures).toFixed(2)} ${s}</td></tr>
+                    <tr><td>💳 Crédits/Prêts</td><td class="depenses">${parseFloat(d.credits).toFixed(2)} ${s}</td></tr>
+                    <tr class="total-row"><td><strong>TOTAL DÉPENSES</strong></td><td class="depenses"><strong>${totalDepenses.toFixed(2)} ${s}</strong></td></tr>
+                </table>
+                
+                <table class="export-table">
+                    <tr><th colspan="2">🎯 RÉSULTATS</th></tr>
+                    <tr class="total-row" style="background:#f0fff4;"><td><strong>💎 RESTE MENSUEL</strong></td><td style="color:#166534;"><strong>${(resteMensuel - epargneRealisable).toFixed(2)} ${s}</strong></td></tr>
+                    <tr><td>📅 Budget journalier</td><td>${Math.max(0,budgetJournalier).toFixed(2)} ${s}</td></tr>
+                    <tr><td>🏦 Épargne réalisable</td><td>${epargneRealisable.toFixed(2)} ${s}</td></tr>
+                    <tr><td>🔒 Réserve sécurité</td><td>${parseFloat(d.reserveSecurite).toFixed(2)} ${s}</td></tr>
+                </table>
+                
+                <p style="text-align:center;color:#94a3b8;font-size:12px;margin-top:20px;">
+                    Généré par Mon Suivi Financier - https://abdelhakim-dev.github.io/mon-suivi-financier/
+                </p>
+            `;
+            
+            // Utiliser html2canvas pour capturer
+            html2canvas(exportDiv, {
+                backgroundColor: '#ffffff',
+                scale: 2,
+                useCORS: true
+            }).then(function(canvas) {
+                var lien = document.createElement('a');
+                lien.download = 'mon-suivi-financier-' + new Date().toISOString().slice(0,10) + '.png';
+                lien.href = canvas.toDataURL('image/png');
+                lien.click();
+                document.body.removeChild(exportDiv);
+            }).catch(function() {
+                document.body.removeChild(exportDiv);
+                alert('Erreur lors de l\'export. Réessayez.');
+            });
+        }
+
+        function exporterBudget(){
+            const data={calculs:JSON.parse(localStorage.getItem('free_budget_system_data')||'{}'),historique:JSON.parse(localStorage.getItem('budget_historique')||'[]')};
+            const blob=new Blob([JSON.stringify(data)],{type:'application/json'});
+            const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='budget_backup.json';a.click();
+        }
 
         function calculerTout(){
             const d=getData();
@@ -629,13 +712,6 @@
             }
         }
 
-        function exporterBudget(){
-         
-            const data={calculs:JSON.parse(localStorage.getItem('free_budget_system_data')||'{}'),historique:JSON.parse(localStorage.getItem('budget_historique')||'[]')};
-            const blob=new Blob([JSON.stringify(data)],{type:'application/json'});
-            const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='budget_backup.json';a.click();
-        }
-
         function importerBudget(e){
             const reader=new FileReader();
             reader.onload=ev=>{try{const d=JSON.parse(ev.target.result);if(d.calculs)localStorage.setItem('free_budget_system_data',JSON.stringify(d.calculs));if(d.historique)localStorage.setItem('budget_historique',JSON.stringify(d.historique));location.reload();}catch(ex){alert('Fichier invalide');}};
@@ -650,22 +726,7 @@
             if(h.length>100)h=h.slice(0,100);
             localStorage.setItem('budget_historique',JSON.stringify(h));alert('✅ Sauvegardé !');
         }
-function exporterImage() {
-    const element = document.querySelector('.app-container');
-    
-    html2canvas(element, {
-        backgroundColor: null,
-        scale: 2
-    }).then(function(canvas) {
-        const lien = document.createElement('a');
-        lien.download = 'mon-suivi-financier-' + new Date().toISOString().slice(0,10) + '.png';
-        lien.href = canvas.toDataURL('image/png');
-        lien.click();
-        alert('✅ Image exportée avec succès !');
-    }).catch(function() {
-        alert('❌ Erreur lors de l\'export. Utilisez la capture d\'écran.');
-    });
-}
+
         function afficherHistorique(){
             changerEcran('historique');const h=JSON.parse(localStorage.getItem('budget_historique')||'[]');
             const c=document.getElementById('history-list');
