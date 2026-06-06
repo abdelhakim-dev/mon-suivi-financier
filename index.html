@@ -18,7 +18,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512x512.png">
     <link rel="apple-touch-icon" href="icons/icon-512x512.png">
-
+     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
     
     <style>
         @keyframes dynamicBackground {
@@ -417,10 +417,12 @@
             <!-- GESTION -->
             <div class="config-screen" style="margin-top:25px;">
                 <h2 id="titre-gestion">📂 Gestion</h2>
-                <div class="config-grid-4">
-                    <button id="btn-sauvegarder" class="btn-action btn-primary" onclick="sauvegarderCalcul()">💾 Sauvegarder</button>
-                    <button id="btn-exporter" class="btn-action" onclick="exporterBudget()">📤 Exporter</button>
-                    <button id="btn-importer" class="btn-action" onclick="document.getElementById('import-file').click()">📥 Importer</button>
+            <div class="config-grid-4">
+                <button id="btn-sauvegarder" class="btn-action btn-primary" onclick="sauvegarderCalcul()">💾 Sauvegarder</button>
+                  <button id="btn-exporter" class="btn-action" onclick="exporterBudget()">📤 Exporter JSON</button>
+             <button id="btn-exporter-image" class="btn-action btn-success" onclick="exporterImage()">🖼️ Exporter Image</button>
+               <button id="btn-importer" class="btn-action" onclick="document.getElementById('import-file').click()">📥 Importer</button>
+                                
                     <input type="file" id="import-file" style="display:none" onchange="importerBudget(event)">
                     <button id="btn-reset" class="btn-action btn-danger" onclick="reinitialiserApplication()">🗑️ Reset</button>
                 </div>
@@ -627,6 +629,7 @@
         }
 
         function exporterBudget(){
+         
             const data={calculs:JSON.parse(localStorage.getItem('free_budget_system_data')||'{}'),historique:JSON.parse(localStorage.getItem('budget_historique')||'[]')};
             const blob=new Blob([JSON.stringify(data)],{type:'application/json'});
             const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='budget_backup.json';a.click();
@@ -646,7 +649,22 @@
             if(h.length>100)h=h.slice(0,100);
             localStorage.setItem('budget_historique',JSON.stringify(h));alert('✅ Sauvegardé !');
         }
-
+function exporterImage() {
+    const element = document.querySelector('.app-container');
+    
+    html2canvas(element, {
+        backgroundColor: null,
+        scale: 2
+    }).then(function(canvas) {
+        const lien = document.createElement('a');
+        lien.download = 'mon-suivi-financier-' + new Date().toISOString().slice(0,10) + '.png';
+        lien.href = canvas.toDataURL('image/png');
+        lien.click();
+        alert('✅ Image exportée avec succès !');
+    }).catch(function() {
+        alert('❌ Erreur lors de l\'export. Utilisez la capture d\'écran.');
+    });
+}
         function afficherHistorique(){
             changerEcran('historique');const h=JSON.parse(localStorage.getItem('budget_historique')||'[]');
             const c=document.getElementById('history-list');
